@@ -61,6 +61,13 @@ class Trie {
 class DFA {
     Node start;
     HashMap<Integer, Node> map;
+    DFA(Trie nfa) {
+        int startID = (1 << nfa.root.id);
+        start = new Node(startID); 
+        map = new HashMap<Integer, Node>();
+        map.put(startID, start); 
+        dfs(startID, nfa);
+    }
     void dfs(int id, Trie nfa) {
         Node node = map.get(id); 
         for (int k = 0; k < nfa.size; ++k)
@@ -85,13 +92,6 @@ class DFA {
                 else node.succ[c] = map.get(nxt);
             }
         }
-    }
-    DFA(Trie nfa) {
-        int startID = (1 << nfa.root.id);
-        start = new Node(startID); 
-        map = new HashMap<Integer, Node>();
-        map.put(startID, start); 
-        dfs(startID, nfa);
     }
     boolean travel(InputReader in) throws IOException {
         Node now = start;
