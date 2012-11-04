@@ -22,15 +22,15 @@ class Solver {
         maxValue = new int[M * 2 + 2][M * 2 + 2];
         coX = new int[M * 2 + 2]; coY = new int[M * 2 + 2];
         for (int i = 0; i < M; ++i) {
-            int ipt = cin.nextInt();
-            int x1 = cin.nextInt(), y1 = cin.nextInt(), side = cin.nextInt();
+            int ipt = cin.nextInt(), side = cin.nextInt();
+            int x1 = cin.nextInt(), y1 = cin.nextInt();
             squares[i] = new Square(ipt, x1, y1, side);
             coX[2 * i] = squares[i].x1; coX[2 * i + 1] = squares[i].x2;
             coY[2 * i] = squares[i].y1; coY[2 * i + 1] = squares[i].y2;
         }
-        coX[2 * M] = 0; coX[2 * M + 1] = L;
-        coY[2 * M] = 0; coY[2 * M + 1] = L;
-        MyUtils.normalize(coX, M * 2 + 2); MyUtils.normalize(coY, M * 2 + 2); 
+        coX[2 * M] = 1; coX[2 * M + 1] = L + 1;
+        coY[2 * M] = 1; coY[2 * M + 1] = L + 1;
+        coX = MyUtils.normalize(coX, M * 2 + 2); coY = MyUtils.normalize(coY, M * 2 + 2); 
         coverSquares();
         check();
     }
@@ -58,6 +58,9 @@ class Solver {
         else System.out.println("IMPOSSIBLE");
     }
     void coverSquares() {
+        for (int i = 0; i < coX.length; ++i)
+            for (int j = 0; j < coY.length; ++j)
+                importance[i][j] = 1;
         for (int k = 0; k < M; ++k) {
             int x1 = Arrays.binarySearch(coX, squares[k].x1); 
             int x2 = Arrays.binarySearch(coX, squares[k].x2); 
@@ -80,13 +83,13 @@ class Square {
 }
 
 class MyUtils {
-    static void normalize(int[] a, int size) {
+    static int[] normalize(int[] a, int size) {
         Arrays.sort(a, 0, size);
         int len = 0;
         for (int i = 0; i < size; ++i) {
             if (i == size - 1 || a[i] != a[i + 1])
                 a[len++] = a[i];
         }
-        a = Arrays.copyOf(a, len);
+        return Arrays.copyOf(a, len);
     }
 }
